@@ -1,28 +1,37 @@
-import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-const IssueItem = () => {
+interface IssueItemProps {
+  number: number;
+  title: string;
+  comments: number;
+  userName: string;
+  userAvatar: string;
+  createdDate: string;
+}
+const IssueItem = (props: IssueItemProps) => {
+  const { number, title, comments, userName, userAvatar, createdDate } = props;
+  const navigate = useNavigate();
+
+  const gotoDetail = (id: number) => {
+    navigate(`/${id}`);
+  };
   return (
-    <IssuesListItemContainer>
+    <IssuesListItemContainer onClick={() => gotoDetail(number)}>
       <IssueHeader>
         <div>
-          <IssueNumber>1</IssueNumber>
-          <IssueTitle>Issue title</IssueTitle>
+          <IssueNumber>#{number}</IssueNumber>
+          <IssueTitle>{title}</IssueTitle>
         </div>
         <div>
-          <IssueComments>comment()</IssueComments>
+          <IssueComments>comment : {comments}</IssueComments>
         </div>
       </IssueHeader>
-      <IssueOverViewWrapper>
-        <IssueOverView>개요</IssueOverView>
-      </IssueOverViewWrapper>
-      <IssueDescriptopnWrapper>
-        <IssueDescriptopn>
-          <IssueUserAvatar src="https://helpx.adobe.com/content/dam/help/en/photoshop/using/quick-actions/remove-background-before-qa1.png"></IssueUserAvatar>
-          <IssueUserName>작성자</IssueUserName>
-          <IssueCreatedDate>작성일</IssueCreatedDate>
-        </IssueDescriptopn>
-      </IssueDescriptopnWrapper>
+      <IssueDescriptopn>
+        <IssueUserAvatar src={userAvatar} />
+        <IssueUserName>{userName}</IssueUserName>
+        <IssueCreatedDate>{createdDate}</IssueCreatedDate>
+      </IssueDescriptopn>
     </IssuesListItemContainer>
   );
 };
@@ -31,10 +40,12 @@ export default IssueItem;
 
 const IssuesListItemContainer = styled.div`
   width: 80%;
+  height: 140px;
   background: #ffffff;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 40px;
   margin-top: 20px;
+  cursor: pointer;
 `;
 
 const IssueHeader = styled.div`
@@ -52,6 +63,7 @@ const IssueNumber = styled.span`
 
 const IssueTitle = styled.span`
   font-size: 16px;
+  font-weight: 600;
   line-height: 70px;
 `;
 
@@ -60,24 +72,18 @@ const IssueComments = styled.div`
   margin-right: 30px;
 `;
 
-const IssueOverViewWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-const IssueOverView = styled.div`
-  width: 70%;
-`;
-
-const IssueDescriptopnWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
 const IssueDescriptopn = styled.div`
   display: flex;
+  margin-left: 50px;
+  align-items: flex-end;
 `;
 const IssueUserAvatar = styled.img`
   width: 30px;
   border-radius: 100%;
+  margin-right: 5px;
 `;
-const IssueUserName = styled.span``;
+const IssueUserName = styled.span`
+  margin-right: 5px;
+  font-weight: 500;
+`;
 const IssueCreatedDate = styled.span``;

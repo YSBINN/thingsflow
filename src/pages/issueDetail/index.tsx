@@ -1,12 +1,93 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import GetIssue from 'api/Issuedetail';
+import issueDetailApi from 'api/Issuedetail';
+import styled from 'styled-components';
 
 const IssueDetail = () => {
-  // const { id } = useParams();
-  const id = '1';
-  GetIssue.getIssue(id as string).then(res => console.log(res));
+  const { id } = useParams();
 
-  return <div>IssueDetail</div>;
+  const [issueDetail, setIssueDetail] = useState<IssueDetail>();
+
+  console.log(issueDetail, 'issueDetail');
+
+  useEffect(() => {
+    issueDetailApi.getIssue(id as string).then(res => setIssueDetail(res));
+  }, []);
+
+  return (
+    <Container>
+      <IssueHeader>
+        <IssueNumberAndTitleContainer>
+          <IssueNumber>#{issueDetail?.number}</IssueNumber>
+          <IssueTitle>{issueDetail?.title}</IssueTitle>
+        </IssueNumberAndTitleContainer>
+        <IssueDescription>
+          <IssueUserAvatar src={issueDetail?.user.avatar_url} />
+          <IssueUserName>{issueDetail?.user.login}</IssueUserName>
+          <IssueCreatedDate>{issueDetail?.created_at.split('T')[0]}</IssueCreatedDate>
+        </IssueDescription>
+      </IssueHeader>
+      <IssueContent>{issueDetail?.body}</IssueContent>
+      <IssueComments>comment : {issueDetail?.comments}</IssueComments>
+    </Container>
+  );
 };
 
 export default IssueDetail;
+
+const Container = styled.div`
+  width: 85%;
+`;
+
+const IssueHeader = styled.div``;
+
+const IssueNumberAndTitleContainer = styled.div``;
+
+const IssueNumber = styled.span`
+  font-weight: 800;
+  font-size: 38px;
+  padding-right: 15px;
+  margin-left: 30px;
+`;
+
+const IssueTitle = styled.span`
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 70px;
+`;
+
+const IssueDescription = styled.div`
+  display: flex;
+  margin-left: 50px;
+  align-items: flex-end;
+  justify-content: flex-end;
+  margin-right: 100px;
+`;
+
+const IssueUserAvatar = styled.img`
+  width: 30px;
+  border-radius: 100%;
+  margin-right: 5px;
+`;
+
+const IssueUserName = styled.span``;
+
+const IssueCreatedDate = styled.span``;
+
+const IssueContent = styled.div`
+  margin-top: 50px;
+`;
+
+const IssueComments = styled.div`
+  margin-left: 50px;
+  margin-top: 50px;
+`;
+
+interface IssueDetail {
+  number: number;
+  title: string;
+  created_at: string;
+  body: string;
+  comments: number;
+  user: { avatar_url: string; login: string };
+}
