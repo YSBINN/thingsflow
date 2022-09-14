@@ -10,6 +10,7 @@ const palette = {
   fontSubColor: '#999999',
   error: '#EB5757',
   subError: '#FFBA52',
+  blueColor: '#0969da',
 
   // Gray
   gray100: '#F1F1F4',
