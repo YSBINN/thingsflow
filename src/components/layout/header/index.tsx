@@ -1,9 +1,15 @@
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const gotohome = () => {
+    navigate('');
+  };
   return (
     <HeaderContainer>
-      <HeaderTitle>Repository</HeaderTitle>
+      <HeaderTitle onClick={gotohome}>Repository</HeaderTitle>
       <OrganizationName>angular</OrganizationName>
       <span>/</span>
       <RepositoryName>angular-cil</RepositoryName>
@@ -24,6 +30,7 @@ const HeaderTitle = styled.div`
   font-weight: 800;
   padding-left: 15%;
   margin-right: 10px;
+  cursor: pointer;
 `;
 const OrganizationName = styled.div`
   font-weight: 500;

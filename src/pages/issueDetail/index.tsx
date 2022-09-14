@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import issueDetailApi from 'api/Issuedetail';
 import styled from 'styled-components';
+import Spinner from 'components/spinner';
 
 const IssueDetail = () => {
   const { id } = useParams();
@@ -14,21 +16,27 @@ const IssueDetail = () => {
     issueDetailApi.getIssue(id as string).then(res => setIssueDetail(res));
   }, []);
 
+  if (!issueDetail) {
+    return <Spinner />;
+  }
+
   return (
     <Container>
       <IssueHeader>
         <IssueNumberAndTitleContainer>
-          <IssueNumber>#{issueDetail?.number}</IssueNumber>
-          <IssueTitle>{issueDetail?.title}</IssueTitle>
+          <IssueNumber>#{issueDetail.number}</IssueNumber>
+          <IssueTitle>{issueDetail.title}</IssueTitle>
         </IssueNumberAndTitleContainer>
         <IssueDescription>
-          <IssueUserAvatar src={issueDetail?.user.avatar_url} />
-          <IssueUserName>{issueDetail?.user.login}</IssueUserName>
-          <IssueCreatedDate>{issueDetail?.created_at.split('T')[0]}</IssueCreatedDate>
+          <IssueUserAvatar src={issueDetail.user.avatar_url} />
+          <IssueUserName>{issueDetail.user.login}</IssueUserName>
+          <IssueCreatedDate>{issueDetail.created_at.split('T')[0]}</IssueCreatedDate>
         </IssueDescription>
       </IssueHeader>
-      <IssueContent>{issueDetail?.body}</IssueContent>
-      <IssueComments>comment : {issueDetail?.comments}</IssueComments>
+      <IssueContent>
+        <ReactMarkdown>{issueDetail.body}</ReactMarkdown>
+      </IssueContent>
+      <IssueComments>comment : {issueDetail.comments}</IssueComments>
     </Container>
   );
 };
@@ -37,6 +45,7 @@ export default IssueDetail;
 
 const Container = styled.div`
   width: 85%;
+  margin-top: 20px;
 `;
 
 const IssueHeader = styled.div``;
@@ -70,17 +79,22 @@ const IssueUserAvatar = styled.img`
   margin-right: 5px;
 `;
 
-const IssueUserName = styled.span``;
+const IssueUserName = styled.span`
+  margin-right: 5px;
+`;
 
 const IssueCreatedDate = styled.span``;
 
 const IssueContent = styled.div`
-  margin-top: 50px;
+  margin: 50px;
+  font-weight: 700;
+  font-size: 16px;
 `;
 
 const IssueComments = styled.div`
   margin-left: 50px;
   margin-top: 50px;
+  font-weight: 800;
 `;
 
 interface IssueDetail {
